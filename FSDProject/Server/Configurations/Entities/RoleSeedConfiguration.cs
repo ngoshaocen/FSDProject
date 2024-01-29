@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-namespace FSDProjetc.Server.Configurations.Entities
+namespace FSDProject.Server.Configurations.Entities
 {
     public class RoleSeedConfiguration : IEntityTypeConfiguration<IdentityRole>
     {

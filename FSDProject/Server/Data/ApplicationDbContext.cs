@@ -3,7 +3,7 @@ using Duende.IdentityServer.EntityFramework.Options;
 using FSDProject.Server.Configurations.Entities;
 using FSDProject.Server.Models;
 using FSDProject.Shared.Domain;
-using FSDProjetc.Server.Configurations.Entities;
+using FSDProject.Server.Configurations.Entities;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
