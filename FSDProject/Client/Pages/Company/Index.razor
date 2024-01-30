@@ -1,0 +1,82 @@
+﻿@page "/companys"
+@using FSDProject.Shared.Domain
+@inject HttpClient _client
+@inject IJSRuntime js
+@attribute [Authorize]
+
+<h3 class="card-title">Available Companys</h3>
+
+@if (Companys == null)
+{
+    <div class="alert alert-info">Loading Companies...</div>
+}
+else
+{
+        <table class="table table-responsive">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Contact Person</th>
+                    <th>Contact Number</th>
+                    <th>Contact Email</th>
+                    <th>Description</th>
+                    <th>Industry</th>
+                    <th>Location</th>
+                    <th>Website</th>
+                    <th>Year Founded</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var company in Companys)
+                {
+                    <tr>
+                        <td>@company.CompanyName</td>
+                        <td>@company.ContactPerson</td>
+                        <td>@company.ContactNumber</td>
+                        <td>@company.ContactEmail</td>
+                        <td>@company.CompanyDescription</td>
+                        <td>@company.CompanyIndustry</td>
+                        <td>@company.CompanyLocation</td>
+                        <td>@company.CompanyWebsite</td>
+                        <td>@company.CompanyFoundedYear</td>
+                        <td>
+                            <a href="/companys/view/@company.Id" class="btn btn-primary">
+                                <span class="oi oi-book"></span>
+                            </a>
+                            <a href="/companys/edit/@company.Id" class="btn btn-warning">
+                                <span class="oi oi-pencil"></span>
+                            </a>
+                            <button class="btn btn-danger" @onclick="@(()=>Delete(company.Id))">
+                                <span class="oi oi-delete"></span>
+                            </button>
+                        </td>
+                    </tr>
+            }           
+            </tbody>
+        </table>
+}
+
+@code {
+    private List<Company>? Companys;
+
+    protected async override Task OnInitializedAsync()
+    {
+        Companys = await _client.GetFromJsonAsync<List<Company>>($"{Endpoints.CompanyEndpoint}");
+    }
+
+    async Task Delete(int companyId)
+    {
+        if (Companys != null)
+        {
+            var company = Companys.First(q => q.Id == companyId);
+            var confirm = await js.InvokeAsync<bool>("confirm", $"Do you want to delete {company.CompanyName}?");
+            if(confirm)
+            {
+                await _client.DeleteAsync($"{Endpoints.CompanyEndpoint}/{companyId}");
+                await OnInitializedAsync();
+            }
+        }
+    }
+
+
+}
