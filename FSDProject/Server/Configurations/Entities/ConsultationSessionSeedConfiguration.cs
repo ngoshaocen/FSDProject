@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FSDProject.Shared.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace FSDProject.Server.Configurations.Entities
@@ -21,7 +20,7 @@ namespace FSDProject.Server.Configurations.Entities
                     CSessionFee = 50,
                     CSessionType = "Online",
                     ConsultantID = 1,
-                    JobSeekerID = 1
+                    JobSeekerID = 1,
                 },
                 new ConsultationSession
                 {
@@ -32,7 +31,7 @@ namespace FSDProject.Server.Configurations.Entities
                     CSessionFee = 75,
                     CSessionType = "In-Person",
                     ConsultantID = 2,
-                    JobSeekerID = 2
+                    JobSeekerID = 2,
                 }
             );
         }

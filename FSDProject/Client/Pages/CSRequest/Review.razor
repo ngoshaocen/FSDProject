@@ -1,0 +1,69 @@
+﻿@page "/csRequests/review"
+@inject HttpClient _client
+
+<h3 class="card-title">Request List</h3>
+<hr />
+<br />
+
+@if (csRequests != null && csRequests.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Consultation Date</th>
+                <th>Consultant</th>
+                <th>JobSeeker</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var csRequest in csRequests)
+            {
+                <tr>
+                    <td>@csRequest.RequestMessage</td>
+                    <td>@csRequest.RequestDate.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    <td>@csRequest.Consultant.ConsName</td>
+                    <td>@csRequest.JobSeeker.JSName</td>
+                    <td>@csRequest.Status</td>
+                    <td>
+                        <NavLink class="btn btn-success" href="/consultationSessions/create">Accept</NavLink>
+
+                        <button class="btn btn-danger" @onclick="() => RejectCSRequest(csRequest)">Reject</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No requests available.</p>
+}
+
+@code {
+    private IList<CSRequest> csRequests;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Fetch the list of requests from the server
+        csRequests = await _client.GetFromJsonAsync<List<CSRequest>>(Endpoints.CSRequestsEndpoint);
+    }
+
+    private async Task AcceptCSRequest(CSRequest csRequest)
+    {
+        // Implement logic for accepting the request (you may need to update the server)
+        // For example, you might update the request status to "Accepted"
+        csRequest.Status = RequestStatus.Accepted;
+        await _client.PutAsJsonAsync($"{Endpoints.CSRequestsEndpoint}/{csRequest.Id}", csRequest);
+    }
+
+    private async Task RejectCSRequest(CSRequest csRequest)
+    {
+        // Implement logic for rejecting the request (you may need to update the server)
+        // For example, you might update the request status to "Rejected"
+        csRequest.Status = RequestStatus.Rejected;
+        await _client.PutAsJsonAsync($"{Endpoints.CSRequestsEndpoint}/{csRequest.Id}", csRequest);
+    }
+}

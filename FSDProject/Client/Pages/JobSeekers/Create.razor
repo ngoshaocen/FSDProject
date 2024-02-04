@@ -1,0 +1,97 @@
+﻿@page "/jobSeekers/create"
+@inject HttpClient _client
+@inject NavigationManager _navManager
+
+<h3 class="card-title">Create New JobSeeker</h3>
+<hr />
+<br />
+
+<EditForm Model="@jobSeeker" OnValidSubmit="CreateJobSeeker">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label>Name: </label>
+        <div>
+            <InputText @bind-Value="@jobSeeker.JSName" class="form-control" />
+            <ValidationMessage For="@(() => jobSeeker.JSName)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Phone Number: </label>
+        <div>
+            <InputText @bind-Value="@jobSeeker.JSPhone" class="form-control" />
+            <ValidationMessage For="@(() => jobSeeker.JSPhone)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Email: </label>
+        <div>
+            <InputText @bind-Value="@jobSeeker.JSEmail" class="form-control" />
+            <ValidationMessage For="@(() => jobSeeker.JSEmail)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Industry Preference: </label>
+        <div>
+            <InputText @bind-Value="@jobSeeker.JSIndustryPreference" class="form-control" />
+            <ValidationMessage For="@(() => jobSeeker.JSIndustryPreference)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Job Preference </label>
+        <div>
+            <InputText @bind-Value="@jobSeeker.JSJobPreference" class="form-control" />
+            <ValidationMessage For="@(() => jobSeeker.JSJobPreference)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Education: </label>
+        <div>
+            <InputText @bind-Value="@jobSeeker.JSEducation" class="form-control" />
+            <ValidationMessage For="@(() => jobSeeker.JSEducation)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Employment Status: </label>
+        <div>
+            <InputText @bind-Value="@jobSeeker.JSEmploymentStatus" class="form-control" />
+            <ValidationMessage For="@(() => jobSeeker.JSEmploymentStatus)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Description: </label>
+        <div>
+            <InputText @bind-Value="@jobSeeker.JSDescription" class="form-control" />
+            <ValidationMessage For="@(() => jobSeeker.JSDescription)" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success btn-block">
+        Create JobSeeker
+    </button>
+</EditForm>
+
+@code {
+    JobSeeker jobSeeker = new JobSeeker();
+
+    private IList<JobSeeker>? JobSeekers;
+
+    protected async override Task OnInitializedAsync()
+    {
+        JobSeekers = await _client.GetFromJsonAsync<List<JobSeeker>>($"{Endpoints.JobSeekersEndpoint}");
+    }
+
+    private async Task CreateJobSeeker()
+    {
+        await _client.PostAsJsonAsync(Endpoints.JobSeekersEndpoint, jobSeeker);
+        _navManager.NavigateTo("/jobSeekers");
+    }
+}

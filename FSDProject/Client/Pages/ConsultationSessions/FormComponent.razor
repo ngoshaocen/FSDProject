@@ -1,0 +1,54 @@
+﻿<EditForm Model="@consultationSession" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <fieldset disabled="@Disabled">
+    <div class="form-group">
+        <label>Name: </label>
+        <div>
+            <InputText @bind-Value="@consultationSession.Name" class="form-control" />
+            <ValidationMessage For="@(() => consultationSession.Name)" />
+        </div>
+
+        <label>Consultation Session Date: </label>
+        <div>
+            <InputDate @bind-Value="@consultationSession.CSessionDate" class="form-control" />
+            <ValidationMessage For="@(() => consultationSession.CSessionDate)" />
+        </div>
+
+        <label>Consultation Session Details: </label>
+        <div>
+            <InputText @bind-Value="@consultationSession.CSessionDetails" class="form-control" />
+            <ValidationMessage For="@(() => consultationSession.CSessionDetails)" />
+        </div>
+
+        <label>Consultation Session Fee: </label>
+        <div>
+            <InputNumber @bind-Value="@consultationSession.CSessionFee" class="form-control" />
+            <ValidationMessage For="@(() => consultationSession.CSessionFee)" />
+        </div>
+
+        <label>Consultation Session Type: </label>
+        <div>
+            <InputText @bind-Value="@consultationSession.CSessionType" class="form-control" />
+            <ValidationMessage For="@(() => consultationSession.CSessionType)" />
+        </div>
+
+
+    </div>
+    </fieldset>
+    @if (!Disabled)
+    {
+        <button type="submit" class="btn btn-success btn-block">
+            @ButtonText
+        </button>
+    }
+    <BackToList Target="consultationSessions" />
+</EditForm>
+
+@code {
+    [Parameter] public bool Disabled { get; set; } = false;
+    [Parameter] public ConsultationSession? consultationSession { get; set; }
+    [Parameter] public string ButtonText { get; set; } = "Save";
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+}

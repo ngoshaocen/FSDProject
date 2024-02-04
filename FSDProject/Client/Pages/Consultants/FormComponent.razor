@@ -1,0 +1,65 @@
+﻿<EditForm Model="@consultant" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <fieldset disabled="@Disabled">
+    <div class="form-group">
+        <label>Name: </label>
+        <div>
+            <InputText @bind-Value="@consultant.ConsName" class="form-control" />
+                <ValidationMessage For="@(() => consultant.ConsName)" />
+        </div>
+
+        <label>Phone Number: </label>
+        <div>
+            <InputText @bind-Value="@consultant.ConsPhone" class="form-control" />
+                <ValidationMessage For="@(() => consultant.ConsPhone)" />
+        </div>
+
+        <label>Email: </label>
+        <div>
+            <InputText @bind-Value="@consultant.ConsEmail" class="form-control" />
+            <ValidationMessage For="@(() => consultant.ConsEmail)" />
+        </div>
+
+        <label>Education: </label>
+        <div>
+            <InputText @bind-Value="@consultant.ConsEducation" class="form-control" />
+                <ValidationMessage For="@(() => consultant.ConsEducation)" />
+        </div>
+
+        <label>Experience: </label>
+        <div>
+            <InputText @bind-Value="@consultant.ConsExperience" class="form-control" />
+                <ValidationMessage For="@(() => consultant.ConsExperience)" />
+        </div>
+
+        <label>Description: </label>
+        <div>
+            <InputText @bind-Value="@consultant.ConsDescription" class="form-control" />
+               <ValidationMessage For="@(() => consultant.ConsDescription)" />
+        </div>
+
+        <label>Industry: </label>
+        <div>
+            <InputText @bind-Value="@consultant.ConsIndustry" class="form-control" />
+                <ValidationMessage For="@(() => consultant.ConsIndustry)" />
+        </div>
+
+    </div>
+    </fieldset>
+    @if (!Disabled)
+    {
+        <button type="submit" class="btn btn-success btn-block">
+            @ButtonText
+        </button>
+    }
+    <BackToList Target="consultants" />
+</EditForm>
+
+@code {
+    [Parameter] public bool Disabled { get; set; } = false;
+    [Parameter] public Consultant? consultant { get; set; }
+    [Parameter] public string ButtonText { get; set; } = "Save";
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+}

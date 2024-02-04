@@ -1,0 +1,103 @@
+﻿@page "/consultants"
+@using FSDProject.Shared.Domain;
+@inject HttpClient _client
+@inject IJSRuntime js
+@inject NavigationManager navManager
+@inject HttpInterceptorService _interceptor
+@attribute [Authorize]
+@implements IDisposable
+
+
+
+<h3 class="card-title">Consultants</h3>
+<br />
+
+<a href="/consultants/create" class="btn btn-secondary">
+    <span class="oi oi-plus"></span>
+    Create New Consultant
+</a>
+<br />
+<br />
+
+@if (Consultants == null)
+{
+    <div class="alert alert-info"> Loading Consultants...</div>
+}
+else
+{
+    <table class="table table-responsive" id="consultantsTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+                <th>Education</th>
+                <th>Industry</th>
+                <th>Experience</th>
+                <th>Description</th>
+                <th>Id</th>
+                <th>Actions</th> <!-- New column for actions -->
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var consultant in Consultants)
+            {
+                <tr>
+                    <td>@consultant.ConsName</td>
+                    <td>@consultant.ConsPhone</td>
+                    <td>@consultant.ConsEmail</td>
+                    <td>@consultant.ConsEducation</td>
+                    <td>@consultant.ConsIndustry</td>
+                    <td>@consultant.ConsExperience</td> <!-- Include ConsExperience -->
+                    <td>@consultant.ConsDescription</td>
+                    <td>@consultant.Id</td>
+                    <td>
+                        <a href="/Consultants/view/@consultant.Id" class="btn btn-primary">
+                            <span class="oi oi-book"></span>
+                        </a>
+                        <a href="/Consultants/edit/@consultant.Id" class="btn btn-warning">
+                            <span class="oi oi-pencil"></span>
+                        </a>
+                        <button class="btn btn-danger" @onclick="@(()=>Delete(consultant.Id))">
+                            <span class="oi oi-delete"></span>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Consultant>? Consultants;
+
+    protected async override Task OnInitializedAsync()
+    {
+        _interceptor.MonitorEvent();
+        Consultants = await _client.GetFromJsonAsync<List<Consultant>>($"{Endpoints.ConsultantsEndpoint}");
+    }
+
+    async Task Delete(int consultantId)
+    {
+        if (Consultants != null)
+        {
+            var consultant = Consultants.First(q => q.Id == consultantId);
+            var confirm = await js.InvokeAsync<bool>("confirm", $"Do you want to delete {consultant.Id}?");
+            if (confirm)
+            {
+                await _client.DeleteAsync($"{Endpoints.ConsultantsEndpoint}/{consultantId}");
+                await OnInitializedAsync();
+            }
+        }
+    }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        await js.InvokeVoidAsync("AddDataTable", "#consultantsTable");
+    }
+
+    public void Dispose()
+    {
+        js.InvokeVoidAsync("DataTablesDispose", "#consultantsTable");
+    }
+}

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FSDProject.Shared.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -28,7 +27,7 @@ namespace FSDProject.Server.Configurations.Entities
                  {
                      Id = 2,
                      ConsName = "Jane Tan",
-                     ConsPhone = "12345678",
+                     ConsPhone = "87654321",
                      ConsEmail = "janetan@gmail.com",
                      ConsEducation = "Ph.D. in Business",
                      ConsIndustry = "Finance",

@@ -1,0 +1,107 @@
+﻿@page "/csRequests"
+@using FSDProject.Shared.Domain;
+@inject HttpClient _client
+@inject IJSRuntime js
+@inject NavigationManager navManager
+@inject HttpInterceptorService _interceptor
+@attribute [Authorize]
+@implements IDisposable
+
+
+
+<h3 class="card-title">Consultation Sessions</h3>
+<br />
+
+<a href="/csRequests/create" class="btn btn-secondary">
+    <span class="oi oi-plus"></span>
+    Create New CSRequest
+</a>
+<br />
+<br />
+
+    @if (CSRequests == null)
+    {
+        <div class="alert alert-info"> Loading CSRequests...</div>
+    }
+    else
+    {
+        <table class="table table-responsive" id="csRequestsTable">
+            <thead>
+                <tr>
+                    <th>Request Message</th>
+                    <th>Request Date</th>
+                    <th>Request Status</th>
+                    <th>Consultant Name</th>
+                    <th>JobSeeker Name</th>
+                    <th>Id</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var csRequest in CSRequests)
+                {
+                    <tr>
+                        <td>@csRequest.RequestMessage</td>
+                        <td>@csRequest.RequestDate</td>
+                        <td>@csRequest.Status</td>
+                        <td>@csRequest.Consultant?.ConsName</td>
+                        <td>@csRequest.JobSeeker?.JSName</td>
+                        <td>@csRequest.Id</td>
+                        <td>
+                            <a href="/CSRequests/view/@csRequest.Id" class="btn btn-primary">
+                                <span class="oi oi-book"></span>
+                            </a>
+                            <a href="/CSRequests/edit/@csRequest.Id" class="btn btn-warning">
+                                <span class="oi oi-pencil"></span>
+                            </a>
+                            <button class="btn btn-danger" @onclick="@(()=>Delete(csRequest.Id))">
+                                <span class="oi oi-delete"></span>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+@code {
+    private List<Consultant>? Consultants;
+    private List<JobSeeker>? JobSeekers;
+    private List<CSRequest>? CSRequests;
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        _interceptor.MonitorEvent();
+        Consultants = await _client.GetFromJsonAsync<List<Consultant>>($"{Endpoints.ConsultantsEndpoint}");
+        JobSeekers = await _client.GetFromJsonAsync<List<JobSeeker>>($"{Endpoints.JobSeekersEndpoint}");
+        CSRequests = await _client.GetFromJsonAsync<List<CSRequest>>($"{Endpoints.CSRequestsEndpoint}");
+
+    }
+
+
+    async Task Delete(int csRequestId)
+    {
+        if (CSRequests != null)
+        {
+            var csRequest = CSRequests.First(q => q.Id == csRequestId);
+            var confirm = await js.InvokeAsync<bool>("confirm", $"Do you want to delete {csRequest.Id}?");
+            if (confirm)
+            {
+                await _client.DeleteAsync($"{Endpoints.CSRequestsEndpoint}/{csRequestId}");
+                await OnInitializedAsync();
+            }
+        }
+    }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        await js.InvokeVoidAsync("AddDataTable", "#csRequestsTable");
+    }
+
+    public void Dispose()
+    {
+        js.InvokeVoidAsync("DataTablesDispose", "#csRequestsTable");
+    }
+}

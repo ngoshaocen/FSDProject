@@ -1,0 +1,89 @@
+﻿@page "/consultants/create"
+@inject HttpClient _client
+@inject NavigationManager _navManager
+
+<h3 class="card-title">Create New Consultant</h3>
+<hr />
+<br />
+
+<EditForm Model="@consultant" OnValidSubmit="CreateConsultant">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label>Consultant Name: </label>
+        <div>
+            <InputText @bind-Value="@consultant.ConsName" class="form-control" />
+            <ValidationMessage For="@(() => consultant.ConsName)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Consultant Phone: </label>
+        <div>
+            <InputText @bind-Value="@consultant.ConsPhone" class="form-control" />
+            <ValidationMessage For="@(() => consultant.ConsPhone)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Consultant Email: </label>
+        <div>
+            <InputText @bind-Value="@consultant.ConsEmail" class="form-control" />
+            <ValidationMessage For="@(() => consultant.ConsEmail)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Consultant Education: </label>
+        <div>
+            <InputText @bind-Value="@consultant.ConsEducation" class="form-control" />
+            <ValidationMessage For="@(() => consultant.ConsEducation)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Consultant Expirence: </label>
+        <div>
+            <InputText @bind-Value="@consultant.ConsExperience" class="form-control" />
+            <ValidationMessage For="@(() => consultant.ConsExperience)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Consultant Description: </label>
+        <div>
+            <InputText @bind-Value="@consultant.ConsDescription" class="form-control" />
+            <ValidationMessage For="@(() => consultant.ConsDescription)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Consultant Industry: </label>
+        <div>
+            <InputText @bind-Value="@consultant.ConsIndustry" class="form-control" />
+            <ValidationMessage For="@(() => consultant.ConsIndustry)" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success btn-block">
+        Create Consultant
+    </button>
+</EditForm>
+
+@code {
+    Consultant consultant = new Consultant();
+
+    private IList<Consultant>? Consultants;
+
+    protected async override Task OnInitializedAsync()
+    {
+        Consultants = await _client.GetFromJsonAsync<List<Consultant>>($"{Endpoints.ConsultantsEndpoint}");
+    }
+
+    private async Task CreateConsultant()
+    {
+        await _client.PostAsJsonAsync(Endpoints.ConsultantsEndpoint, consultant);
+        _navManager.NavigateTo("/consultants");
+    }
+}

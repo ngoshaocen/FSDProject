@@ -1,0 +1,103 @@
+﻿@page "/jobSeekers"
+@using FSDProject.Shared.Domain;
+@inject HttpClient _client
+@inject IJSRuntime js
+@inject NavigationManager navManager
+@inject HttpInterceptorService _interceptor
+@attribute [Authorize]
+@implements IDisposable
+
+<h3 class="card-title">Job Seekers</h3>
+<br />
+
+<a href="/jobSeekers/create" class="btn btn-secondary">
+    <span class="oi oi-plus"></span>
+    Create New JobSeeker
+</a>
+<br />
+<br />
+
+@if (JobSeekers == null)
+{
+    <div class="alert alert-info"> Loading JobSeekers...</div>
+}
+else
+{
+    <table class="table table-responsive" id="jobSeekersTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Industry Preference</th>
+                <th>Job Preference</th>
+                <th>Education</th>
+                <th>EmploymentStatus</th>
+                <th>Description</th>
+                <th>Id</th>
+                <th>Action</th> <!-- This was missing -->
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var jobSeeker in JobSeekers)
+            {
+                <tr>
+                    <td>@jobSeeker.JSName</td>
+                    <td>@jobSeeker.JSPhone</td>
+                    <td>@jobSeeker.JSEmail</td>
+                    <td>@jobSeeker.JSIndustryPreference</td>
+                    <td>@jobSeeker.JSJobPreference</td>
+                    <td>@jobSeeker.JSEducation</td>
+                    <td>@jobSeeker.JSEmploymentStatus</td>
+                    <td>@jobSeeker.JSDescription</td>
+                    <td>@jobSeeker.Id</td>
+                    <th>
+                        <a href="/JobSeekers/view/@jobSeeker.Id" class="btn btn-primary">
+                            <span class="oi oi-book"></span>
+                        </a>
+                        <a href="/JobSeekers/edit/@jobSeeker.Id" class="btn btn-warning">
+                            <span class="oi oi-pencil"></span>
+                        </a>
+                        <button class="btn btn-danger" @onclick="@(()=>Delete(jobSeeker.Id))">
+                            <span class="oi oi-delete"></span>
+                        </button>
+                    </th>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<JobSeeker>? JobSeekers;
+
+    protected async override Task OnInitializedAsync()
+    {
+        _interceptor.MonitorEvent();
+        JobSeekers = await _client.GetFromJsonAsync<List<JobSeeker>>($"{Endpoints.JobSeekersEndpoint}");
+    }
+
+    async Task Delete(int jobSeekerId)
+    {
+        if (JobSeekers != null)
+        {
+            var jobSeeker = JobSeekers.First(q => q.Id == jobSeekerId);
+            var confirm = await js.InvokeAsync<bool>("confirm", $"Do you want to delete {jobSeeker.Id}?");
+            if (confirm)
+            {
+                await _client.DeleteAsync($"{Endpoints.JobSeekersEndpoint}/{jobSeekerId}");
+                await OnInitializedAsync();
+            }
+        }
+    }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        await js.InvokeVoidAsync("AddDataTable", "#jobSeekersTable");
+    }
+
+    public void Dispose()
+    {
+        js.InvokeVoidAsync("DataTablesDispose", "#jobSeekersTable");
+    }
+}
