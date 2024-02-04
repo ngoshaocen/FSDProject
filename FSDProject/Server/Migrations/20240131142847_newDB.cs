@@ -1,10 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace FSDProject.Server.Data.Migrations
+#nullable disable
+
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
+namespace FSDProject.Server.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    /// <inheritdoc />
+    public partial class newDB : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -26,6 +32,8 @@ namespace FSDProject.Server.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -47,6 +55,29 @@ namespace FSDProject.Server.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Consultants",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ConsName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConsPhone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConsEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConsEducation = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConsIndustry = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConsExperience = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConsDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Consultants", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DeviceCodes",
                 columns: table => new
                 {
@@ -58,11 +89,35 @@ namespace FSDProject.Server.Data.Migrations
                     Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Expiration = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Data = table.Column<string>(type: "nvarchar(max)", maxLength: 50020, nullable: false)
+                    Data = table.Column<string>(type: "nvarchar(max)", maxLength: 50000, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DeviceCodes", x => x.UserCode);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "JobSeekers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    JSName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JSEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JSPhone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JSIndustryPreference = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    JSJobPreference = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    JSEmploymentStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JSDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JSEducation = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JobSeekers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -72,11 +127,11 @@ namespace FSDProject.Server.Data.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Version = table.Column<int>(type: "int", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Use = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    Use = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Algorithm = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     IsX509Certificate = table.Column<bool>(type: "bit", nullable: false),
                     DataProtected = table.Column<bool>(type: "bit", nullable: false),
-                    Data = table.Column<string>(type: "nvarchar(max)", maxLength: 50020, nullable: false)
+                    Data = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -96,7 +151,7 @@ namespace FSDProject.Server.Data.Migrations
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Expiration = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ConsumedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Data = table.Column<string>(type: "nvarchar(max)", maxLength: 50020, nullable: false)
+                    Data = table.Column<string>(type: "nvarchar(max)", maxLength: 50000, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -209,6 +264,96 @@ namespace FSDProject.Server.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ConsultationSessions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CSessionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CSessionDetails = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CSessionFee = table.Column<int>(type: "int", nullable: false),
+                    CSessionType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConsultantID = table.Column<int>(type: "int", nullable: false),
+                    JobSeekerID = table.Column<int>(type: "int", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConsultationSessions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ConsultationSessions_Consultants_ConsultantID",
+                        column: x => x.ConsultantID,
+                        principalTable: "Consultants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ConsultationSessions_JobSeekers_JobSeekerID",
+                        column: x => x.JobSeekerID,
+                        principalTable: "JobSeekers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "525e0c01-8777-45bb-97a8-7487b6267ca1", null, "Consultant", "CONSULTANT" },
+                    { "c8090b62-0e8c-4631-a3fb-717ebe2a55ab", null, "JobSeeker", "JOBSEEKER" },
+                    { "ce0d9f29-087e-469c-b766-95c6fcad87a6", null, "Staff", "STAFF" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[,]
+                {
+                    { "3781efa7-66dc-47f0-860f-e506d04102e4", 0, "1de37611-0ab2-4ba2-874e-35add8d76b60", "staff@localhost.com", false, "Staff", "User", false, null, "STAFF@LOCALHOST.COM", "staff@LOCALHOST.COM", "AQAAAAIAAYagAAAAEPd0ZALRDs9j2ek6KQ48hYU0ffQnKbXKUTd+s35lOrBaHGhmmusDJYCoZYGEtXyWjw==", null, false, "cfde052d-3365-4db2-a297-37915b3a87e3", false, "staff@localhost.com" },
+                    { "c8090b62-0e8c-4631-a3fb-717ebe2a55ab", 0, "d7f28c06-dbfd-41b3-bd89-4a9c855fb78d", "consultant@gmail.com", false, "Consultant", "User", false, null, "CONSULTANT@GMAIL.COM", "consultant@GMAIL.COM", "AQAAAAIAAYagAAAAENz/pH153QjA4ISqR/RLqOOlzTWLZAM8G1s6UN+rtYip1slgVxvEBQ8bvXn3neeu+A==", null, false, "143f1d3b-1eb9-4378-a9b4-9d2e5c14acc3", false, "consultant@gmail.com" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Consultants",
+                columns: new[] { "Id", "ConsDescription", "ConsEducation", "ConsEmail", "ConsExperience", "ConsIndustry", "ConsName", "ConsPhone", "CreatedBy", "DateCreated", "DateUpdated", "UpdatedBy" },
+                values: new object[,]
+                {
+                    { 1, "Experienced consultant in technology industry.", "Ph.D in Computer Science", "johnlim@gmail.com", "5 years", "Technology", "John Lim", "12345678", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null },
+                    { 2, "Finance consultant with a Ph.D. in Business.", "Ph.D. in Business", "janetan@gmail.com", "8 years", "Finance", "Jane Tan", "87654321", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "JobSeekers",
+                columns: new[] { "Id", "CreatedBy", "DateCreated", "DateUpdated", "JSDescription", "JSEducation", "JSEmail", "JSEmploymentStatus", "JSIndustryPreference", "JSJobPreference", "JSName", "JSPhone", "UpdatedBy" },
+                values: new object[,]
+                {
+                    { 1, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "TP Computer Engineering Graduate.", "Diploma in Computer Engineering", "timloh@gmail.com", " Unemployed", "Engineering", "Software Engineer", "Tim Loh", "12341234", null },
+                    { 2, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "TP Graduate. Currently working for XXX company.", "Diploma in CyberSecurity", "jamesteo@gmail.com", " Employed", "IT", "IOT Security", "James Teo", "56785678", null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[,]
+                {
+                    { "ce0d9f29-087e-469c-b766-95c6fcad87a6", "3781efa7-66dc-47f0-860f-e506d04102e4" },
+                    { "525e0c01-8777-45bb-97a8-7487b6267ca1", "c8090b62-0e8c-4631-a3fb-717ebe2a55ab" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ConsultationSessions",
+                columns: new[] { "Id", "CSessionDate", "CSessionDetails", "CSessionFee", "CSessionType", "ConsultantID", "CreatedBy", "DateCreated", "DateUpdated", "JobSeekerID", "Name", "UpdatedBy" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 2, 7, 22, 28, 47, 826, DateTimeKind.Local).AddTicks(733), "1 Hour Consultation Session for Tim Loh.", 50, "Online", 1, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, "John Lim's Consultation", null },
+                    { 2, new DateTime(2024, 2, 14, 22, 28, 47, 826, DateTimeKind.Local).AddTicks(758), "1 Hour Consultation Session For James Teo.", 75, "In-Person", 2, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, "Jane Tan's Consultation", null }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -249,6 +394,16 @@ namespace FSDProject.Server.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ConsultationSessions_ConsultantID",
+                table: "ConsultationSessions",
+                column: "ConsultantID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ConsultationSessions_JobSeekerID",
+                table: "ConsultationSessions",
+                column: "JobSeekerID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DeviceCodes_DeviceCode",
                 table: "DeviceCodes",
                 column: "DeviceCode",
@@ -285,6 +440,7 @@ namespace FSDProject.Server.Data.Migrations
                 columns: new[] { "SubjectId", "SessionId", "Type" });
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
@@ -303,6 +459,9 @@ namespace FSDProject.Server.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "ConsultationSessions");
+
+            migrationBuilder.DropTable(
                 name: "DeviceCodes");
 
             migrationBuilder.DropTable(
@@ -316,6 +475,12 @@ namespace FSDProject.Server.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Consultants");
+
+            migrationBuilder.DropTable(
+                name: "JobSeekers");
         }
     }
 }

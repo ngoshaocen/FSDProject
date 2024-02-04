@@ -1,0 +1,109 @@
+﻿@page "/consultationSessions"
+@using FSDProject.Shared.Domain;
+@inject HttpClient _client
+@inject IJSRuntime js
+@inject NavigationManager navManager
+@inject HttpInterceptorService _interceptor
+@attribute [Authorize]
+@implements IDisposable
+
+
+
+<h3 class="card-title">Consultation Sessions</h3>
+<br />
+
+<a href="/consultationSessions/create" class="btn btn-secondary">
+    <span class="oi oi-plus"></span>
+    Create New ConsultationSession
+</a>
+<br />
+<br />
+
+@if (ConsultationSessions == null)
+{
+    <div class="alert alert-info"> Loading ConsultationSessions...</div>
+}
+else
+{
+    <table class="table table-responsive" id="consultationSessionsTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Session Date</th>
+                <th>Session Details</th>
+                <th>Session Fee</th>
+                <th>Session Type</th>
+                <th>Consultant Name</th>
+                <th>JobSeeker Name</th>
+                <th>Id</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var consultationSession in ConsultationSessions)
+            {
+                <tr>
+                    <td>@consultationSession.Name</td>
+                    <td>@consultationSession.CSessionDate</td>
+                    <td>@consultationSession.CSessionDetails</td>
+                    <td>@consultationSession.CSessionFee</td>
+                    <td>@consultationSession.CSessionType</td>
+                    <td>@consultationSession.Consultant?.ConsName</td>
+                    <td>@consultationSession.JobSeeker?.JSName</td>
+                    <td>@consultationSession.Id</td>
+                    <td>
+                        <a href="/ConsultationSessions/view/@consultationSession.Id" class="btn btn-primary">
+                            <span class="oi oi-book"></span>
+                        </a>
+                        <a href="/ConsultationSessions/edit/@consultationSession.Id" class="btn btn-warning">
+                            <span class="oi oi-pencil"></span>
+                        </a>
+                        <button class="btn btn-danger" @onclick="@(()=>Delete(consultationSession.Id))">
+                            <span class="oi oi-delete"></span>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Consultant>? Consultants;
+    private List<JobSeeker>? JobSeekers;
+    private List<ConsultationSession>? ConsultationSessions;
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        _interceptor.MonitorEvent();
+        Consultants = await _client.GetFromJsonAsync<List<Consultant>>($"{Endpoints.ConsultantsEndpoint}");
+        JobSeekers = await _client.GetFromJsonAsync<List<JobSeeker>>($"{Endpoints.JobSeekersEndpoint}");
+        ConsultationSessions = await _client.GetFromJsonAsync<List<ConsultationSession>>($"{Endpoints.ConsultationSessionsEndpoint}");
+
+    }
+
+    async Task Delete(int consultationSessionId)
+    {
+        if (ConsultationSessions != null)
+        {
+            var consultationSession = ConsultationSessions.First(q => q.Id == consultationSessionId);
+            var confirm = await js.InvokeAsync<bool>("confirm", $"Do you want to delete {consultationSession.Id}?");
+            if (confirm)
+            {
+                await _client.DeleteAsync($"{Endpoints.ConsultationSessionsEndpoint}/{consultationSessionId}");
+                await OnInitializedAsync();
+            }
+        }
+    }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        await js.InvokeVoidAsync("AddDataTable", "#consultationSessionsTable");
+    }
+
+    public void Dispose()
+    {
+        js.InvokeVoidAsync("DataTablesDispose", "#consultationSessionsTable");
+    }
+}

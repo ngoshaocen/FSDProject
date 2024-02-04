@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 namespace FSDProject.Server.Configurations.Entities
 {
     public class RoleSeedConfiguration : IEntityTypeConfiguration<IdentityRole>
@@ -22,7 +23,7 @@ namespace FSDProject.Server.Configurations.Entities
             },
             new IdentityRole
             {
-                Id = "f0d990b3-8ae8-4357-a62b-5c4380685ce1b",
+                Id = "c8090b62-0e8c-4631-a3fb-717ebe2a55ab",
                 Name = "JobSeeker",
                 NormalizedName = "JOBSEEKER"
             }

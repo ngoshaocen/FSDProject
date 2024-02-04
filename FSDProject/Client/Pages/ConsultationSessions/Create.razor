@@ -1,0 +1,110 @@
+﻿@page "/consultationSessions/create"
+@inject HttpClient _client
+@inject NavigationManager _navManager
+
+<h3 class="card-title">Create New ConsultationSession</h3>
+<hr />
+<br />
+
+<EditForm Model="@consultationSession" OnValidSubmit="CreateConsultationSession">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label>Name: </label>
+        <div>
+            <InputText @bind-Value="@consultationSession.Name" class="form-control" />
+            <ValidationMessage For="@(() => consultationSession.Name)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Consultation Date: </label>
+        <div>
+            <InputDate @bind-Value="@consultationSession.CSessionDate" class="form-control" />
+            <ValidationMessage For="@(() => consultationSession.CSessionDate)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>CSession Details: </label>
+        <div>
+            <InputText @bind-Value="@consultationSession.CSessionDetails" class="form-control" />
+            <ValidationMessage For="@(() => consultationSession.CSessionDetails)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>CSession Fee: </label>
+        <div>
+            <InputNumber @bind-Value="@consultationSession.CSessionFee" class="form-control" />
+            <ValidationMessage For="@(() => consultationSession.CSessionFee)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>CSession Type: </label>
+        <div>
+            <InputText @bind-Value="@consultationSession.CSessionType" class="form-control" />
+            <ValidationMessage For="@(() => consultationSession.CSessionType)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Consultant ID: </label>
+        <div>
+            <InputSelect @bind-Value="@consultationSession.ConsultantID" class="form-control">
+            <option value = ""> -- Select Consultant</option>
+            @if (Consultants != null)
+            {
+                foreach (var consultant in Consultants)
+                {
+                        <option value="@consultant.Id">@consultant.ConsName</option>
+                }
+            }
+            </InputSelect>
+            <ValidationMessage For="@(() => consultationSession.ConsultantID)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>JobSeeker ID: </label>
+        <div>
+            <InputSelect @bind-Value="@consultationSession.JobSeekerID" class="form-control">
+                <option value=""> -- Select JobSeeker</option>
+                @if (JobSeekers != null)
+                {
+                    foreach (var jobSeeker in JobSeekers)
+                    {
+                        <option value="@jobSeeker.Id">@jobSeeker.JSName</option>
+                    }
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => consultationSession.JobSeekerID)" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success btn-block">
+        Create ConsultationSession
+    </button>
+</EditForm>
+
+@code {
+    ConsultationSession consultationSession = new ConsultationSession();
+
+    private IList<Consultant>? Consultants;
+    private IList<JobSeeker>? JobSeekers;
+  
+
+    protected async override Task OnInitializedAsync()
+    {
+        Consultants = await _client.GetFromJsonAsync<List<Consultant>>($"{Endpoints.ConsultantsEndpoint}");
+        JobSeekers = await _client.GetFromJsonAsync<List<JobSeeker>>($"{Endpoints.JobSeekersEndpoint}");
+    }
+
+    private async Task CreateConsultationSession()
+    {
+        await _client.PostAsJsonAsync(Endpoints.ConsultationSessionsEndpoint, consultationSession);
+        _navManager.NavigateTo("/consultationSessions");
+    }
+}

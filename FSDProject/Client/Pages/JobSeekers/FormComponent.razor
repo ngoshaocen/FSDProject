@@ -1,0 +1,71 @@
+﻿<EditForm Model="@jobSeeker" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <fieldset disabled="@Disabled">
+    <div class="form-group">
+        <label>Name: </label>
+        <div>
+            <InputText @bind-Value="@jobSeeker.JSName" class="form-control" />
+                <ValidationMessage For="@(() => jobSeeker.JSName)" />
+        </div>
+
+        <label>Phone Number: </label>
+        <div>
+            <InputText @bind-Value="@jobSeeker.JSPhone" class="form-control" />
+                <ValidationMessage For="@(() => jobSeeker.JSPhone)" />
+        </div>
+
+        <label>Email: </label>
+        <div>
+            <InputText @bind-Value="@jobSeeker.JSEmail" class="form-control" />
+                <ValidationMessage For="@(() => jobSeeker.JSEmail)" />
+        </div>
+
+        <label>Industry Preference: </label>
+        <div>
+            <InputText @bind-Value="@jobSeeker.JSIndustryPreference" class="form-control" />
+                <ValidationMessage For="@(() => jobSeeker.JSIndustryPreference)" />
+        </div>
+
+        <label>Job Preference: </label>
+        <div>
+            <InputText @bind-Value="@jobSeeker.JSJobPreference" class="form-control" />
+                <ValidationMessage For="@(() => jobSeeker.JSJobPreference)" />
+        </div>
+
+        <label>Education: </label>
+        <div>
+            <InputText @bind-Value="@jobSeeker.JSEducation" class="form-control" />
+                <ValidationMessage For="@(() => jobSeeker.JSEducation)" />
+        </div>
+
+        <label>Employment Status: </label>
+        <div>
+            <InputText @bind-Value="@jobSeeker.JSEmploymentStatus" class="form-control" />
+                <ValidationMessage For="@(() => jobSeeker.JSEmploymentStatus)" />
+        </div>
+
+            <label>Description: </label>
+            <div>
+                <InputText @bind-Value="@jobSeeker.JSDescription" class="form-control" />
+                <ValidationMessage For="@(() => jobSeeker.JSDescription)" />
+            </div>
+
+    </div>
+    </fieldset>
+    @if (!Disabled)
+    {
+        <button type="submit" class="btn btn-success btn-block">
+            @ButtonText
+        </button>
+    }
+    <BackToList Target="jobSeekers" />
+</EditForm>
+
+@code {
+    [Parameter] public bool Disabled { get; set; } = false;
+    [Parameter] public JobSeeker? jobSeeker { get; set; }
+    [Parameter] public string ButtonText { get; set; } = "Save";
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+}

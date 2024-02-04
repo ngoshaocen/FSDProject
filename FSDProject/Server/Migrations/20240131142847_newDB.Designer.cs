@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace FSDProject.Server.Data.Migrations
+namespace FSDProject.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231205030434_AddedNameToUser")]
-    partial class AddedNameToUser
+    [Migration("20240131142847_newDB")]
+    partial class newDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -235,6 +235,293 @@ namespace FSDProject.Server.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "1de37611-0ab2-4ba2-874e-35add8d76b60",
+                            Email = "staff@localhost.com",
+                            EmailConfirmed = false,
+                            FirstName = "Staff",
+                            LastName = "User",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "STAFF@LOCALHOST.COM",
+                            NormalizedUserName = "staff@LOCALHOST.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPd0ZALRDs9j2ek6KQ48hYU0ffQnKbXKUTd+s35lOrBaHGhmmusDJYCoZYGEtXyWjw==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "cfde052d-3365-4db2-a297-37915b3a87e3",
+                            TwoFactorEnabled = false,
+                            UserName = "staff@localhost.com"
+                        },
+                        new
+                        {
+                            Id = "c8090b62-0e8c-4631-a3fb-717ebe2a55ab",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "d7f28c06-dbfd-41b3-bd89-4a9c855fb78d",
+                            Email = "consultant@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "Consultant",
+                            LastName = "User",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "CONSULTANT@GMAIL.COM",
+                            NormalizedUserName = "consultant@GMAIL.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAENz/pH153QjA4ISqR/RLqOOlzTWLZAM8G1s6UN+rtYip1slgVxvEBQ8bvXn3neeu+A==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "143f1d3b-1eb9-4378-a9b4-9d2e5c14acc3",
+                            TwoFactorEnabled = false,
+                            UserName = "consultant@gmail.com"
+                        });
+                });
+
+            modelBuilder.Entity("FSDProject.Shared.Domain.Consultant", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ConsDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConsEducation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConsEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConsExperience")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConsIndustry")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConsName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConsPhone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Consultants");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ConsDescription = "Experienced consultant in technology industry.",
+                            ConsEducation = "Ph.D in Computer Science",
+                            ConsEmail = "johnlim@gmail.com",
+                            ConsExperience = "5 years",
+                            ConsIndustry = "Technology",
+                            ConsName = "John Lim",
+                            ConsPhone = "12345678",
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ConsDescription = "Finance consultant with a Ph.D. in Business.",
+                            ConsEducation = "Ph.D. in Business",
+                            ConsEmail = "janetan@gmail.com",
+                            ConsExperience = "8 years",
+                            ConsIndustry = "Finance",
+                            ConsName = "Jane Tan",
+                            ConsPhone = "87654321",
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
+                });
+
+            modelBuilder.Entity("FSDProject.Shared.Domain.ConsultationSession", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CSessionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CSessionDetails")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CSessionFee")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CSessionType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ConsultantID")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("JobSeekerID")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConsultantID");
+
+                    b.HasIndex("JobSeekerID");
+
+                    b.ToTable("ConsultationSessions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CSessionDate = new DateTime(2024, 2, 7, 22, 28, 47, 826, DateTimeKind.Local).AddTicks(733),
+                            CSessionDetails = "1 Hour Consultation Session for Tim Loh.",
+                            CSessionFee = 50,
+                            CSessionType = "Online",
+                            ConsultantID = 1,
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            JobSeekerID = 1,
+                            Name = "John Lim's Consultation"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CSessionDate = new DateTime(2024, 2, 14, 22, 28, 47, 826, DateTimeKind.Local).AddTicks(758),
+                            CSessionDetails = "1 Hour Consultation Session For James Teo.",
+                            CSessionFee = 75,
+                            CSessionType = "In-Person",
+                            ConsultantID = 2,
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            JobSeekerID = 2,
+                            Name = "Jane Tan's Consultation"
+                        });
+                });
+
+            modelBuilder.Entity("FSDProject.Shared.Domain.JobSeeker", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("JSDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("JSEducation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("JSEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("JSEmploymentStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("JSIndustryPreference")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("JSJobPreference")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("JSName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("JSPhone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("JobSeekers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            JSDescription = "TP Computer Engineering Graduate.",
+                            JSEducation = "Diploma in Computer Engineering",
+                            JSEmail = "timloh@gmail.com",
+                            JSEmploymentStatus = " Unemployed",
+                            JSIndustryPreference = "Engineering",
+                            JSJobPreference = "Software Engineer",
+                            JSName = "Tim Loh",
+                            JSPhone = "12341234"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            JSDescription = "TP Graduate. Currently working for XXX company.",
+                            JSEducation = "Diploma in CyberSecurity",
+                            JSEmail = "jamesteo@gmail.com",
+                            JSEmploymentStatus = " Employed",
+                            JSIndustryPreference = "IT",
+                            JSJobPreference = "IOT Security",
+                            JSName = "James Teo",
+                            JSPhone = "56785678"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -262,6 +549,26 @@ namespace FSDProject.Server.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "525e0c01-8777-45bb-97a8-7487b6267ca1",
+                            Name = "Consultant",
+                            NormalizedName = "CONSULTANT"
+                        },
+                        new
+                        {
+                            Id = "ce0d9f29-087e-469c-b766-95c6fcad87a6",
+                            Name = "Staff",
+                            NormalizedName = "STAFF"
+                        },
+                        new
+                        {
+                            Id = "c8090b62-0e8c-4631-a3fb-717ebe2a55ab",
+                            Name = "JobSeeker",
+                            NormalizedName = "JOBSEEKER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -351,6 +658,18 @@ namespace FSDProject.Server.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "3781efa7-66dc-47f0-860f-e506d04102e4",
+                            RoleId = "ce0d9f29-087e-469c-b766-95c6fcad87a6"
+                        },
+                        new
+                        {
+                            UserId = "c8090b62-0e8c-4631-a3fb-717ebe2a55ab",
+                            RoleId = "525e0c01-8777-45bb-97a8-7487b6267ca1"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -372,6 +691,25 @@ namespace FSDProject.Server.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("FSDProject.Shared.Domain.ConsultationSession", b =>
+                {
+                    b.HasOne("FSDProject.Shared.Domain.Consultant", "Consultant")
+                        .WithMany("ConsultationSessions")
+                        .HasForeignKey("ConsultantID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FSDProject.Shared.Domain.JobSeeker", "JobSeeker")
+                        .WithMany("ConsultationSessions")
+                        .HasForeignKey("JobSeekerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Consultant");
+
+                    b.Navigation("JobSeeker");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -423,6 +761,16 @@ namespace FSDProject.Server.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("FSDProject.Shared.Domain.Consultant", b =>
+                {
+                    b.Navigation("ConsultationSessions");
+                });
+
+            modelBuilder.Entity("FSDProject.Shared.Domain.JobSeeker", b =>
+                {
+                    b.Navigation("ConsultationSessions");
                 });
 #pragma warning restore 612, 618
         }

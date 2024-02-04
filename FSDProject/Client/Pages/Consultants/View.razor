@@ -1,0 +1,14 @@
+﻿@page "/consultants/view/{id:int}"
+@inject HttpClient _client
+@inject NavigationManager _navManager
+<h3>View</h3>
+<FormComponent consultant="consultant" Disabled="true" />
+@code {
+	[Parameter] public int id { get; set; }
+	Consultant? consultant = new Consultant();
+	protected async override Task OnParametersSetAsync()
+	{
+		consultant = await
+		_client.GetFromJsonAsync<Consultant>($"{Endpoints.ConsultantsEndpoint}/{id}");
+	}
+}
